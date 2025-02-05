@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
-// import connectDB from "./config/mongodbConfig.js";
 import cors from "cors";
+import connectDB from "./config/mongodb.config.js";
 
 dotenv.config();
 
@@ -9,7 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 app.use(cors())
 
-// connectDB().catch(err => console.error(err));
+connectDB().catch(err => console.error(err));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
