@@ -8,6 +8,9 @@ import SignupPage from './pages/SignupPage.jsx'
 import CreateForm from './pages/CreateForm.jsx'
 import PreviewPage from './pages/PreviewPage.jsx'
 import DashBoard from './pages/DashBoard.jsx'
+import Successfull from './pages/Successfull.jsx'
+import UserResponsesPage from './pages/UserResponsesPage.jsx'
+import SucessfullDeleted from './pages/SucessfullDeleted.jsx'
 
 
 const router = createBrowserRouter([
@@ -34,6 +37,18 @@ const router = createBrowserRouter([
   {
     path : '/dashboard',
     element : <DashBoard />
+  },
+  {
+    path : '/reponse/subitted',
+    element : <Successfull />
+  },
+  {
+    path : '/form/:formId/responses',
+    element : <UserResponsesPage />
+  },
+  {
+    path : '/form/successfull-deleted',
+    element : <SucessfullDeleted />
   }
 ])
 

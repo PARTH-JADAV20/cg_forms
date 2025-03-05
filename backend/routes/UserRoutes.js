@@ -58,6 +58,72 @@ UserRouter.post('/create', async (req, res) => {
   }
 });
 
+UserRouter.post('/:userId/:formId/add-response', async (req, res) => {
+  try {
+    const { userId, formId } = req.params;
+    const { responseId } = req.body;
+
+    // Validate required fields
+    if (!responseId) {
+      return res.status(400).json({
+        message: 'Missing required field: responseId'
+      });
+    }
+
+    // Find the user and update the response_ids array of the specified form
+    const user = await User.findOneAndUpdate(
+      { _id: userId, 'created_forms._id': formId },
+      { $push: { 'created_forms.$.response_ids': responseId } },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        message: 'User or form not found'
+      });
+    }
+
+    res.status(200).json({
+      message: 'Response ID added successfully',
+      user
+    });
+
+  } catch (error) {
+    console.error('Error adding response ID:', error);
+    res.status(500).json({
+      message: 'Internal server error',
+      error: error.message
+    });
+  }
+});
+
+
+UserRouter.get('/:userId/:formId/questions', async (req, res) => {
+  try {
+    const { userId, formId } = req.params;
+
+    // Find the user and get the questions of the specified form
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const form = user.created_forms.id(formId);
+    if (!form) {
+      return res.status(404).json({ message: 'Form not found' });
+    }
+
+    res.status(200).json({ questions: form });
+  } catch (error) {
+    console.error('Error fetching questions:', error);
+    res.status(500).json({
+      message: 'Internal server error',
+      error: error.message
+    });
+  }
+});
+
+
 // Route to get user details
 UserRouter.get('/:userId', async (req, res) => {
   try {
@@ -79,8 +145,67 @@ UserRouter.get('/:userId', async (req, res) => {
   }
 });
 
+// Route to get full populated form by userId and formId
+UserRouter.get('/:userId/forms/:formId', async (req, res) => {
+  try {
+    const { userId, formId } = req.params;
+
+    const user = await User.findById(userId).populate({
+      path: 'created_forms',
+      match: { _id: formId },
+      populate: {
+        path: 'response_ids',
+        model: 'UserResponse'
+      }
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const form = user.created_forms.find(f => f._id.toString() === formId);
+    if (!form) {
+      return res.status(404).json({ message: 'Form not found' });
+    }
+
+    res.status(200).json(form);
+  } catch (error) {
+    console.error('Error fetching form:', error);
+    res.status(500).json({
+      message: 'Internal server error',
+      error: error.message
+    });
+  }
+});
 
 
+// Route to delete a form from user's created_forms
+UserRouter.delete('/:userId/forms/:formId', async (req, res) => {
+  try {
+    const { userId, formId } = req.params;
+
+    const user = await User.findOneAndUpdate(
+      { _id: userId },
+      { $pull: { created_forms: { _id: formId } } },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({
+      message: 'Form deleted successfully',
+      user
+    });
+  } catch (error) {
+    console.error('Error deleting form:', error);
+    res.status(500).json({
+      message: 'Internal server error',
+      error: error.message
+    });
+  }
+});
 
 // Route to add a new form to user's created_forms
 UserRouter.post('/:userId/add-form', async (req, res) => {

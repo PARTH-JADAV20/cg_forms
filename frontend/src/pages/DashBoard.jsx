@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import { getFromStorage } from '../utils/encryptStorageutil';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaLink, FaRemoveFormat, FaTimes } from 'react-icons/fa';
+import { FaLink, FaPlus, FaRemoveFormat, FaTimes } from 'react-icons/fa';
 import { MdDelete } from "react-icons/md";
+import { motion } from 'framer-motion';
+
 
 
 const DashBoard = () => {
@@ -29,7 +31,7 @@ const DashBoard = () => {
                     navigate('/signup')
                 }
 
-
+                console.log(window.location.host)
 
             })()
         }, [])
@@ -49,6 +51,7 @@ const DashBoard = () => {
                     return (
                         <div className="flex flex-col p-4 border-2 border-gray-300 last:border-b-0 bg-white rounded-lg shadow-lg" key={key}>
                             <div className="flex items-center justify-between">
+                            <NavLink to={`/form/${ele._id}/responses`}>
                                 <div className="flex flex-col">
                                     <h2 className="font-bold text-3xl">{ele.title}</h2>
                                     <p className="text-sm mt-1">{ele.description}</p>
@@ -61,15 +64,19 @@ const DashBoard = () => {
                                         </span>
                                     </div>
                                 </div>
+                                    </NavLink>
                                 <div className="flex items-center text-xl max-md:flex-col max-md:gap-3">
-                                    <button className="bg-red-500 cursor-pointer hover:bg-red-700 aspect-square text-white font-bold py-1 px-2 rounded-full" onClick={() => {
-                                        navigator.clipboard.writeText(`https://localhost:3000/response/${username}/${ele._id}`)
-                                        alert("Form link copied to clipboard")
-                                    }}>
+                                    <button className="bg-red-500 cursor-pointer hover:bg-red-700 aspect-square text-white font-bold py-1 px-2 rounded-full" 
+                                        onClick={(async()=>{
+                                            const SerVerResponse = await axios.delete(`http://localhost:8080/api/user/${username}/forms/${ele._id}`)
+                                            console.log(SerVerResponse);
+                                            navigate('/form/successfull-deleted')
+                                        })}
+                                    >
                                         <MdDelete />
                                     </button>
                                     <button className="bg-blue-500 cursor-pointer aspect-square hover:bg-blue-700 text-white font-bold py-1 px-2 rounded-full ml-2" onClick={() => {
-                                        navigator.clipboard.writeText(`Welcome to my Form: https://localhost:3000/response/${username}/${ele._id}`)
+                                        navigator.clipboard.writeText(`${window.location.host}/response/${username}/${ele._id}`)
                                         alert("Form link copied to clipboard")
                                     }}>
                                         <FaLink />
@@ -83,6 +90,17 @@ const DashBoard = () => {
 
                 <span className=""></span>
             </div>
+
+            <motion.button
+                className="fixed bottom-5 cursor-pointer right-5 bg-blue-500 text-white rounded-full p-4 hover:bg-green-700"
+                initial={{ x: 1000 }}
+                animate={{ x: 0 }}
+                transition={{ duration: 0.5 }}
+                onClick={() => navigate('/create-form')}
+            >
+                <FaPlus size={24} />
+            </motion.button>
+            
 
         </div>
     </>

@@ -22,6 +22,11 @@ const FormSchema = new mongoose.Schema({
       }
     ], // Array of questions
     expiration: { type: String, required: true },
+    response_ids: {
+      type: [{ type: mongoose.Types.ObjectId, ref: 'UserResponse' }],
+      default: []
+    }
+
   }, {timestamps: true});
 
 

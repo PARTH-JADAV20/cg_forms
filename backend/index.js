@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/mongodbConfig.js";
 import cors from 'cors'
 import UserRouter from "./routes/UserRoutes.js";
+import ResponseRoutes from "./routes/ResponseRoute.js";
 
 
 dotenv.config();
@@ -18,6 +19,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/user', UserRouter)
+
+app.use('/api/response', ResponseRoutes)
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
