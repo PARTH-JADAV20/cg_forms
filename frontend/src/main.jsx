@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import LandingPage from './pages/LandingPage.jsx'
 import SignupPage from './pages/SignupPage.jsx'
 import CreateForm from './pages/CreateForm.jsx'
+import PreviewPage from './pages/PreviewPage.jsx'
 
 
 const router = createBrowserRouter([
@@ -20,6 +21,14 @@ const router = createBrowserRouter([
   {
     path: '/create-form',
     element: <CreateForm />,
+  },
+  {
+    path: '/preview',
+    element: <PreviewPage />,
+  },
+  {
+    path: '/response/:userId/:formId',
+    element: <PreviewPage />,
   }
 ])
 

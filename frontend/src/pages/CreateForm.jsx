@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FaTrash, FaPlus } from 'react-icons/fa';
 import Navbar from '../components/Navbar';
+import axios from 'axios';
 
 const questionTypes = [
   { value: 'mcq', label: 'Multiple Choice' },
@@ -73,7 +74,7 @@ function App() {
     ));
   };
 
-  const handleCreate = () => {
+  const handleCreate = async() => {
     if ((new Date() > new Date(`${expirationDate}T${expirationTime}`)) || expirationDate == null){
         console.log("Expiration date is invalid")
         setErrormsg("Expiration date is invalid")
@@ -88,6 +89,14 @@ function App() {
             : null
         };
         console.log(formData);
+
+        try {
+          const serverRes = await axios.post("http://localhost:8080/api/user/eh8w0SOovfU4BLATTG38gt4nNpI3/add-form", formData)
+          console.log(serverRes);
+        } catch (error) {
+          console.log(error)
+        }
+
     }
   };
 

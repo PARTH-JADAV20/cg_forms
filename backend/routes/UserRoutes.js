@@ -86,52 +86,23 @@ UserRouter.get('/:userId', async (req, res) => {
 UserRouter.post('/:userId/add-form', async (req, res) => {
   try {
     const { userId } = req.params;
-    const formData = req.body;
+    const formData = req.body
 
-    // Validate form data
-    if (!formData.title || !formData.expiration) {
-      return res.status(400).json({ 
-        message: 'Missing required form fields: title or expiration' 
-      });
-    }
+    const user = await User.findOne({_id : userId});
+    console.log(user)
 
-    // Find the user
-    const user = await User.findById(userId);
-    
-    if (!user) {
-      return res.status(404).json({ 
-        message: 'User not found' 
-      });
-    }
-
-    // Prepare the form object
-    const newForm = {
-      title: formData.title,
-      description: formData.description || '',
-      questions: formData.questions || [],
-      expiration: new Date(formData.expiration),
-      created_at: new Date()
-    };
-
-    // Add the form to user's created_forms
-    user.created_forms.push(newForm);
-
-    // Save the updated user
+    user.created_forms.push(formData);
     await user.save();
 
-    // Return the newly added form
-    const addedForm = user.created_forms[user.created_forms.length - 1];
-
-    res.status(201).json({ 
-      message: 'Form added successfully', 
-      form: addedForm 
+    res.status(200).json({
+      message: 'Form added successfully',
+      form: formData,
+      user: user
     });
-
   } catch (error) {
-    console.error('Error adding form:', error);
-    res.status(500).json({ 
-      message: 'Internal server error', 
-      error: error.message 
+    res.status(500).json({
+      message: 'Internal server error',
+      error: error.message
     });
   }
 });
@@ -139,27 +110,22 @@ UserRouter.post('/:userId/add-form', async (req, res) => {
 // Route to get all forms for a user
 UserRouter.get('/:userId/forms', async (req, res) => {
   try {
-    const { userId } = req.params;
-
-    // Find the user and populate forms
-    const user = await User.findById(userId);
     
-    if (!user) {
-      return res.status(404).json({ 
-        message: 'User not found' 
-      });
-    }
+    const { userId } = req.params;
+    const user = await User.findOne({_id : userId});
 
-    res.status(200).json({ 
-      forms: user.created_forms 
+    res.status(200).json({
+      message: 'Forms fetched successfully',
+      forms: user.created_forms
     });
 
   } catch (error) {
-    console.error('Error fetching user forms:', error);
-    res.status(500).json({ 
-      message: 'Internal server error', 
-      error: error.message 
+    
+    res.status(500).json({
+      message: 'Internal server error',
+      error: error.message
     });
+
   }
 });
 
