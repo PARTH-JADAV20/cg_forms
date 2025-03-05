@@ -26,7 +26,7 @@ const HeroSection = () => {
             
             <div className="flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
               <Link 
-                to="/signup" 
+                to="/dashboard" 
                 className="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-500 text-white font-bold rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 ease-in-out"
               >
                 Get Started Free

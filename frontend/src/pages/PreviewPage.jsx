@@ -33,6 +33,9 @@ function PreviewPage() {
     const { userId, formId } = useParams();
 
 
+    const handleUserSubmit = () => {
+        
+    }
 
 
 
@@ -221,9 +224,13 @@ function PreviewPage() {
           </div>
         ))}
 
-        <div className="bg-blue-500 p-4 rounded-lg" onClick={showdata}>
-            Submit
-        </div>
+        <button
+          type="button"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg w-full cursor-pointer"
+          onClick={showdata}
+        >
+          Submit
+        </button>
         
       </div>
     </div>

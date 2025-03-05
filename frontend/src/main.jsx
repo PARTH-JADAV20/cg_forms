@@ -7,6 +7,7 @@ import LandingPage from './pages/LandingPage.jsx'
 import SignupPage from './pages/SignupPage.jsx'
 import CreateForm from './pages/CreateForm.jsx'
 import PreviewPage from './pages/PreviewPage.jsx'
+import DashBoard from './pages/DashBoard.jsx'
 
 
 const router = createBrowserRouter([
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: '/response/:userId/:formId',
     element: <PreviewPage />,
+  },
+  {
+    path : '/dashboard',
+    element : <DashBoard />
   }
 ])
 

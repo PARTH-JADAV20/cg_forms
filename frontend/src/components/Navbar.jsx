@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { getFromStorage } from '../utils/encryptStorageutil';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isUserLogin, setIsUserLogin] = useState(false);
+    const [username, setUsername] = useState("User");
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -17,14 +20,28 @@ const Navbar = () => {
         { label: 'Pricing', href: '#pricing' },
     ];
 
+
+    useEffect(() => {
+        (async () => {
+            const checking = await getFromStorage("utilityfunctions");
+            if (checking) {
+                console.log(checking)
+                setIsUserLogin(true)
+                setUsername(checking.name)
+            } else {
+                setIsUserLogin(false)
+            }
+        })()
+    }, [])
+
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md shadow-sm py-4">
             <div className='standard-max-width mx-auto px-4'>
                 <div className="container mx-auto">
                     <div className="flex justify-between items-center">
                         {/* Logo */}
-                        <Link 
-                            to="/" 
+                        <Link
+                            to="/"
                             className="flex items-center group"
                         >
                             <span className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500 group-hover:from-blue-500 group-hover:to-purple-600 transition duration-300">
@@ -35,21 +52,27 @@ const Navbar = () => {
                         {/* Desktop Menu */}
                         <div className="hidden md:flex items-center space-x-6">
                             {menuItems.map((item, index) => (
-                                <a 
-                                    key={index} 
-                                    href={item.href} 
+                                <a
+                                    key={index}
+                                    href={item.href}
                                     className="text-gray-700 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-purple-600 hover:to-blue-500 font-medium transition duration-300"
                                 >
                                     {item.label}
                                 </a>
                             ))}
-                            
-                            <Link 
-                                to="/signup" 
-                                className="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-500 text-white font-bold rounded-full shadow-md hover:shadow-xl transform hover:-translate-y-1 transition duration-300 ease-in-out"
-                            >
-                                Get Started
-                            </Link>
+
+                            {
+                                (isUserLogin) ? <div className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-500 text-white font-bold rounded-full text-center shadow-md hover:shadow-xl transform hover:-translate-y-1 transition duration-300 ease-in-out cursor-pointer">{username}</div> :
+                                    (
+                                        <Link
+                                            to="/signup"
+                                            className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-500 text-white font-bold rounded-full text-center shadow-md hover:shadow-xl transform hover:-translate-y-1 transition duration-300 ease-in-out"
+                                            onClick={toggleMenu}
+                                        >
+                                            Get Started
+                                        </Link>
+                                    )
+                            }
                         </div>
 
                         {/* Mobile Menu Button */}
@@ -66,7 +89,7 @@ const Navbar = () => {
                     {/* Mobile Menu */}
                     <AnimatePresence>
                         {isOpen && (
-                            <motion.div 
+                            <motion.div
                                 initial={{ opacity: 0, height: 0 }}
                                 animate={{ opacity: 1, height: 'auto' }}
                                 exit={{ opacity: 0, height: 0 }}
@@ -74,23 +97,28 @@ const Navbar = () => {
                             >
                                 <div className="flex flex-col space-y-4">
                                     {menuItems.map((item, index) => (
-                                        <a 
-                                            key={index} 
-                                            href={item.href} 
+                                        <a
+                                            key={index}
+                                            href={item.href}
                                             className="text-gray-700 hover:text-transparent hover:bg-clip-text hover:bg-gradient-to-r hover:from-purple-600 hover:to-blue-500 font-medium"
                                             onClick={toggleMenu}
                                         >
                                             {item.label}
                                         </a>
                                     ))}
-                                    
-                                    <Link 
-                                        to="/signup" 
-                                        className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-500 text-white font-bold rounded-full text-center shadow-md hover:shadow-xl transform hover:-translate-y-1 transition duration-300 ease-in-out"
-                                        onClick={toggleMenu}
-                                    >
-                                        Get Started
-                                    </Link>
+
+                                    {
+                                        (isUserLogin) ? <div className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-500 text-white font-bold rounded-full text-center shadow-md hover:shadow-xl transform hover:-translate-y-1 transition duration-300 ease-in-out cursor-pointer">{username}</div> :
+                                            (
+                                                <Link
+                                                    to="/signup"
+                                                    className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-500 text-white font-bold rounded-full text-center shadow-md hover:shadow-xl transform hover:-translate-y-1 transition duration-300 ease-in-out"
+                                                    onClick={toggleMenu}
+                                                >
+                                                    Get Started
+                                                </Link>
+                                            )
+                                    }
                                 </div>
                             </motion.div>
                         )}

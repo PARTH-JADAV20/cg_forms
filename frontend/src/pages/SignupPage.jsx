@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import { FaGoogle } from "react-icons/fa";
 import { auth, googleProvider } from "../configs/firebaseConfig";
 import axios from "axios";
+import { saveToStorage } from "../utils/encryptStorageutil";
 
 const SignupPage = () => {
   const handleGoogleSignIn = async () => {
@@ -14,6 +15,7 @@ const SignupPage = () => {
       const user = result.user;
     //   console.log("User Info:", user);
       console.log({name:user.displayName, email:user.email, _id:user.uid});
+      saveToStorage("utilityfunctions", JSON.stringify({name:user.displayName, email:user.email, _id:user.uid}))
       const serverRes = await axios.post("http://localhost:8080/api/user/create", {name:user.displayName, email:user.email, _id:user.uid})
       console.log(serverRes.data)
       alert(`Welcome ${user.displayName}`);
