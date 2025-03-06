@@ -20,6 +20,8 @@ const SignupPage = () => {
       if(serverRes.status == 200) {
         window.history.back()
       }
+
+      window.history.back()
       // window.history.back();
     } catch (error) {
       console.error("Google Sign-In Error:", error);
