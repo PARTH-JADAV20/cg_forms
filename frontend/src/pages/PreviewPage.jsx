@@ -41,14 +41,14 @@ function PreviewPage() {
 
     const handleUserSubmit = async () => {
 
-        setIsLoading(true)
-
+        
         for (const question of questions) {
             if (question.required && !userResponse[question._id]) {
                 alert(`Please fill the required field: ${question.question}`)
                 return
             }
         }
+        setIsLoading(true)
 
         const serverResponse = await axios.post(`${import.meta.env.VITE_BASE_URL_BACKEND}/api/response/SubmitForm`, {
             email: (await getFromStorage("utilityfunctions")).email,
