@@ -1,5 +1,6 @@
 import express from 'express';
 import { User } from '../models/User.model.js';
+import UserResponse from '../models/UserResponse.model.js';
 
 const UserRouter = express.Router();
 
@@ -183,6 +184,8 @@ UserRouter.get('/:userId/forms/:formId', async (req, res) => {
 UserRouter.delete('/:userId/forms/:formId', async (req, res) => {
   try {
     const { userId, formId } = req.params;
+
+    await UserResponse.deleteMany({ form_id: formId });
 
     const user = await User.findOneAndUpdate(
       { _id: userId },
