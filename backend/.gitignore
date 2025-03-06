@@ -22,8 +22,8 @@ pids/
 *.log
 
 ### Cache & Build Files ###
-dist/
-build/
+# dist/
+# build/
 out/
 .tmp/
 .cache/

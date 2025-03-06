@@ -6,16 +6,15 @@ import Footer from "../components/Footer";
 import { FaGoogle } from "react-icons/fa";
 import { auth, googleProvider } from "../configs/firebaseConfig";
 import axios from "axios";
+import { saveToStorage } from "../utils/encryptStorageutil";
 
 const SignupPage = () => {
   const handleGoogleSignIn = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-    //   console.log("User Info:", user);
-      console.log({name:user.displayName, email:user.email, _id:user.uid});
-      const serverRes = await axios.post("http://localhost:8080/api/user/create", {name:user.displayName, email:user.email, _id:user.uid})
-      console.log(serverRes.data)
+      saveToStorage("utilityfunctions", JSON.stringify({name:user.displayName, email:user.email, _id:user.uid}))
+      const serverRes = await axios.post(`${import.meta.env.VITE_BASE_URL_BACKEND}/api/user/create`, {name:user.displayName, email:user.email, _id:user.uid})
       alert(`Welcome ${user.displayName}`);
     } catch (error) {
       console.error("Google Sign-In Error:", error);

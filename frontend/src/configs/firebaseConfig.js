@@ -18,8 +18,8 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBP9LDsgagv7eczVx6PjfHZZcp-vG0QmAw",
-  authDomain: "cgforms-99774.firebaseapp.com",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
   projectId: "cgforms-99774",
   storageBucket: "cgforms-99774.firebasestorage.app",
   messagingSenderId: "566409358976",

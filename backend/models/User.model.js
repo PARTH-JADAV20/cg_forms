@@ -1,27 +1,54 @@
 import mongoose from "mongoose";
 
-const OptionSchema = new mongoose.Schema({
-    text: { type: String, required: true },
-  });
 
-const QuestionSchema = new mongoose.Schema({
-    question: { type: String, required: true },
-    type: {
-      type: String,
-      enum: ["text", "number", "boolean", "mcq", "checkbox"],
-      required: true,
-    },
-    options: [OptionSchema], 
-    required: { type: Boolean, default: false },
-  });
 
 const FormSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String },
-    questions: [QuestionSchema], // Array of questions
-    expiration: { type: Date, required: true },
-    created_at: { type: Date, default: Date.now },
+    questions: [
+      {
+        type: {
+          type : String,
+        },
+        question: {
+          type : String
+        },
+        options: {
+          type : [String]
+        },
+        required: {
+          type : Boolean
+        }
+      }
+    ], // Array of questions
+    expiration: { type: String, required: true },
+    response_ids: {
+      type: [{ type: mongoose.Types.ObjectId, ref: 'UserResponse' }],
+      default: []
+    }
+
   }, {timestamps: true});
+
+
+  // {
+  //   title: 'Untitled Form',
+  //   description: 'Form Description',
+  //   questions: [
+  //     {
+  //       type: 'text',
+  //       question: 'Your Name',
+  //       options: [Array],
+  //       required: true
+  //     },
+  //     {
+  //       type: 'number',
+  //       question: 'Your Age',
+  //       options: [Array],
+  //       required: true
+  //     }
+  //   ],
+  //   expiration: '2025-03-06T06:05:00.000Z'
+  // }
 
 const UserSchema = new mongoose.Schema({
     _id : { // This is the Firebase userid
