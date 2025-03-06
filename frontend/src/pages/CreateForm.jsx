@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { getFromStorage } from '../utils/encryptStorageutil';
+import { useNavigate } from 'react-router-dom';
 
 const questionTypes = [
   { value: 'mcq', label: 'Multiple Choice' },
@@ -21,6 +22,8 @@ function App() {
   const [expirationTime, setExpirationTime] = useState('');
   const [errormsg, setErrormsg] = useState("")
   const [isFormCreated, setIsFormCreated] = useState(false)
+  const [isloading, setIsloading] = useState(false)
+  const navigate = useNavigate()
 
   const addQuestion = () => {
     setQuestions([
@@ -92,17 +95,25 @@ function App() {
       };
 
       try {
+        setIsloading(true)
         const serverRes = await axios.post(`${import.meta.env.VITE_BASE_URL_BACKEND}/api/user/${(await getFromStorage("utilityfunctions"))._id}/add-form`, formData)
         setIsFormCreated(true)
-        setTimeout(() => {
-          navigator('/dashboard')
-        }, 3000);
+
+        navigate('/dashboard')
       } catch (error) {
         console.log(error)
       }
 
     }
   };
+
+  useEffect(()=>{
+    (async()=>{
+      if (!(await getFromStorage("utilityfunctions"))) {
+        navigate("/signup")
+    }
+    })()
+  }, [])
 
   useEffect(() => {
     setErrormsg("")
@@ -112,7 +123,15 @@ function App() {
     <>
       <Navbar />
       {
-        isFormCreated ?
+        isloading ? 
+        <div className="min-h-[calc(100vh-72px)] bg-gray-100 p-8 mt-[72px] flex items-center justify-center">
+                                <div className="flex items-center justify-center">
+                                    <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-600"></div>
+                                </div>
+                            </div>
+                            :
+        (
+          isFormCreated ?
           <div className="min-h-[calc(100vh-72px)] mt-[72px] ">
             <motion.div
               initial={{ opacity: 0, y: -50 }}
@@ -310,6 +329,8 @@ function App() {
               </div>
             </div>
           )
+      
+        )
       }
     </>
   );
