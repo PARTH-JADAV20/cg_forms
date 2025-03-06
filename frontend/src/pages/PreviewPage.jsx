@@ -47,7 +47,7 @@ function PreviewPage() {
             }
         }
 
-        const serverResponse = await axios.post("http://localhost:8080/api/response/SubmitForm", {
+        const serverResponse = await axios.post(`${import.meta.env.VITE_BASE_URL_BACKEND}/api/response/SubmitForm`, {
             email: (await getFromStorage("utilityfunctions")).email,
             userResponse,
             formId
@@ -55,7 +55,7 @@ function PreviewPage() {
 
         console.log(serverResponse.data.response._id)
 
-        const anotherResponse = await axios.post(`http://localhost:8080/api/user/${userId}/${formId}/add-response`, {
+        const anotherResponse = await axios.post(`${import.meta.env.VITE_BASE_URL_BACKEND}/api/user/${userId}/${formId}/add-response`, {
             responseId: serverResponse.data.response._id
         })
 
@@ -77,7 +77,7 @@ function PreviewPage() {
         (async () => {
 
 
-            // const serverResponseForm = await axios.get(`http://localhost:8080/api/user/${userId}/${formId}`)
+            // const serverResponseForm = await axios.get(`${import.meta.env.VITE_BASE_URL_BACKEND}/api/user/${userId}/${formId}`)
 
 
             if (!(await getFromStorage("utilityfunctions"))) {
@@ -87,12 +87,12 @@ function PreviewPage() {
             let serverResponseQuestion;
 
             try {
-                serverResponseQuestion = await axios.get(`http://localhost:8080/api/user/${userId}/${formId}/questions`)
+                serverResponseQuestion = await axios.get(`${import.meta.env.VITE_BASE_URL_BACKEND}/api/user/${userId}/${formId}/questions`)
             } catch (error) {
                 setPostNotFound(true)
             }
 
-            // const serverResponseQuestion = await axios.get(`http://localhost:8080/api/user/${userId}/${formId}/questions`)
+            // const serverResponseQuestion = await axios.get(`${import.meta.env.VITE_BASE_URL_BACKEND}/api/user/${userId}/${formId}/questions`)
 
             // if(serverResponseQuestion.status == 404) {
             //     setPostNotFound(true)
@@ -106,12 +106,10 @@ function PreviewPage() {
                 }, 3000);
             }
 
-            const serverResponse = await axios.get("http://localhost:8080/api/user/eh8w0SOovfU4BLATTG38gt4nNpI3/forms");
-            // console.log(serverResponse.data)
+            const serverResponse = await axios.get(`${import.meta.env.VITE_BASE_URL_BACKEND}/api/user/eh8w0SOovfU4BLATTG38gt4nNpI3/forms`);
             setQuestions(serverResponseQuestion.data.questions.questions)
             setFormTitle(serverResponseQuestion.data.questions.title)
             setFormDescription(serverResponseQuestion.data.questions.description)
-            console.log(serverResponse.status)
             serverResponseQuestion.data.questions.questions.map((question) => {
                 if (question.type === 'mcq') {
                     setUserResponse((prevResponse) => ({
@@ -141,7 +139,6 @@ function PreviewPage() {
                 }
             });
 
-            console.log(userResponse)
             if (serverResponse.status == 200) {
                 setIsLoading(false)
             }
@@ -150,9 +147,7 @@ function PreviewPage() {
     }, [])
 
 
-    const showdata = () => {
-        console.log(userResponse)
-    }
+
 
     return (
         <>

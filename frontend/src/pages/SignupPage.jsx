@@ -13,11 +13,8 @@ const SignupPage = () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-    //   console.log("User Info:", user);
-      console.log({name:user.displayName, email:user.email, _id:user.uid});
       saveToStorage("utilityfunctions", JSON.stringify({name:user.displayName, email:user.email, _id:user.uid}))
-      const serverRes = await axios.post("http://localhost:8080/api/user/create", {name:user.displayName, email:user.email, _id:user.uid})
-      console.log(serverRes.data)
+      const serverRes = await axios.post(`${import.meta.env.VITE_BASE_URL_BACKEND}/api/user/create`, {name:user.displayName, email:user.email, _id:user.uid})
       alert(`Welcome ${user.displayName}`);
     } catch (error) {
       console.error("Google Sign-In Error:", error);

@@ -62,10 +62,8 @@ const UserResponsesPage = () => {
                 navigate("/signup")
             }
 
-            console.log(`http://localhost:8080/api/user/${(await getFromStorage("utilityfunctions"))._id}/forms/${formId}`)
-            const ServerResponse = await axios.get(`http://localhost:8080/api/user/${(await getFromStorage("utilityfunctions"))._id}/forms/${formId}`)
+            const ServerResponse = await axios.get(`${import.meta.env.VITE_BASE_URL_BACKEND}/api/user/${(await getFromStorage("utilityfunctions"))._id}/forms/${formId}`)
 
-            console.log(ServerResponse.status)
             setFormData(ServerResponse.data)
             if(ServerResponse.status == 200){
                 setIsloading(false)

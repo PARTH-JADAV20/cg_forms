@@ -79,7 +79,6 @@ function App() {
 
   const handleCreate = async () => {
     if ((new Date() > new Date(`${expirationDate}T${expirationTime}`)) || expirationDate == null) {
-      console.log("Expiration date is invalid")
       setErrormsg("Expiration date is invalid")
     } else {
 
@@ -91,12 +90,9 @@ function App() {
           ? new Date(`${expirationDate}T${expirationTime}`).toISOString()
           : null
       };
-      console.log(formData);
-      console.log((await getFromStorage("utilityfunctions"))._id)
 
       try {
-        const serverRes = await axios.post(`http://localhost:8080/api/user/${(await getFromStorage("utilityfunctions"))._id}/add-form`, formData)
-        console.log(serverRes);
+        const serverRes = await axios.post(`${import.meta.env.VITE_BASE_URL_BACKEND}/api/user/${(await getFromStorage("utilityfunctions"))._id}/add-form`, formData)
         setIsFormCreated(true)
         setTimeout(() => {
           navigator('/dashboard')
